@@ -4,7 +4,7 @@ import java.io.Serializable;
 
  
 @javax.persistence.Entity 
-@javax.persistence.DiscriminatorValue("ROLE_ADMIN")
+@javax.persistence.DiscriminatorValue("ADMIN")
 public class Admin extends UserAvis implements Serializable
 {
 	private static final long serialVersionUID = 4814306147966430302L;

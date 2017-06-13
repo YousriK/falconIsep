@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller 
 public class DisplayUserController {
 
-    private final Logger log = LoggerFactory.getLogger(IndexController.class);
+    private final Logger log = LoggerFactory.getLogger(DisplayUserController.class);
 
     @RequestMapping("/displayU")
 	public String displayU(Model model){

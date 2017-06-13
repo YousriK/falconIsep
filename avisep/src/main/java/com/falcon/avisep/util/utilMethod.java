@@ -1,12 +1,21 @@
 package com.falcon.avisep.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.falcon.avisep.model.Role;
+import com.falcon.avisep.model.UserAvis;
 
 public class utilMethod {
 	
@@ -17,7 +26,7 @@ public class utilMethod {
 		ArrayList<E> list = new ArrayList<E>();
 		if(iterable != null) {
 			for(E e: iterable) {
-				list.add(e);
+				if(e!=null)list.add(e);
 			}
 		}
 		return list;
@@ -72,6 +81,21 @@ public class utilMethod {
 		}
 		return listS;
 	}
+	public static String takeFromTitle(Map<String, Object> jsonObjectBuilderForm) {
+		int i=0;
+		List<String> listS=new ArrayList<String>();
+		Map<String, Object>  json=jsonObjectBuilderForm;
+		for (Entry<String, Object> entry : json.entrySet()) {
+//			System.out.println("entry key "+i+": "+entry.getKey());
+			System.out.println("Object value "+i+": "+entry.getValue());
+			String s=String.valueOf(entry.getValue());
+				if(i==0){
+					return String.valueOf(entry.getValue());
+				}
+			i++;
+		}
+		return null;
+	}
 	public static String getString(String s, int i){
 		//if (s.charAt(i)=='=') return s.substring(i+1, searchEnd(s,i));
 		if (s.charAt(i)=='=') return s.substring(i+1);
@@ -97,15 +121,26 @@ public class utilMethod {
 		}
 		return jsonData;
 	}
-	public int[] count(String s){
-		int val[]=new int[2];
-		for(int i1=0;i1<s.length();i1++){
-			if(s.charAt(i1)==','){
-				val[i1]=i1;
-			}
-		}
+	public static List<String> parseOptions(String s){
 		
-		return val;
+		s.replaceAll("\\[", "").replaceAll("\\]", "");
+		String[] chaine=s.split(", ");
+		List<String> options=Arrays.asList(chaine);
+		
+//		while(i<s.length()){
+//			if(s.charAt(i)!=',' && s.charAt(i)!='['){
+//				chaine=chaine+s.charAt(i);
+//			}
+//			if(s.charAt(i)==']'){
+//				options.add(chaine);
+//				break;
+//			}
+//			if(!(s.charAt(i)!=',' && s.charAt(i)!='[')){
+//				options.add(chaine);
+//			}
+//			i++;
+//		}
+		return options;
 		
 	}
 	public static List<String> getF(List<String> listS) {
@@ -133,4 +168,93 @@ public class utilMethod {
 		
 		return listS;
 	}
+	
+	
+	public static String getBaseUrl(HttpServletRequest request) {
+		UserAvis user=((UserAvis )request.getSession().getAttribute("userLogged"));
+		Role role= user.getRole();
+		switch (role)
+		{
+		case STUDENT:
+			return "welcomeS";
+		case VTEACHER:
+			return "welcomeT";
+		case ADMIN:
+			return "welcomeA";
+		case VTEACHER_and_ETEACHER:
+			return "welcomeT";
+		default:
+			return "index";
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static Map<String, Object> toMap(JSONObject object) throws JSONException {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		Iterator<String> keysItr = object.keys();
+		while(keysItr.hasNext()) {
+			String key = keysItr.next();
+			Object value = object.get(key);
+
+			if(value instanceof JSONArray) {
+				value = toList((JSONArray) value);
+			}
+
+			else if(value instanceof JSONObject) {
+				value = toMap((JSONObject) value);
+			}
+			map.put(key, value);
+		}
+		return map;
+	}
+
+	public static List<Object> toList(JSONArray array) throws JSONException {
+		List<Object> list = new ArrayList<Object>();
+		for(int i = 0; i < array.length(); i++) {
+			Object value = array.get(i);
+			if(value instanceof JSONArray) {
+				value = toList((JSONArray) value);
+			}
+
+			else if(value instanceof JSONObject) {
+				value = toMap((JSONObject) value);
+			}
+			list.add(value);
+		}
+		return list;
+	}
+	public static List<Object> takeValuesFromMap(List<String> keysList, Map<String, Object> map) throws JSONException {
+		List<Object> list = new ArrayList<Object>();
+		for(int i = 0; i < keysList.size(); i++) {
+
+			String s=removeChar(map.get(keysList.get(i)).toString(), '[');
+			s=removeChar(s, ']');
+			list.add(i,s);
+		}
+		return list;
+	}
+	public static String removeChar(String s, char c) {
+		StringBuffer r = new StringBuffer( s.length() );
+		r.setLength( s.length() );
+		int current = 0;
+		for (int i = 0; i < s.length(); i ++) {
+			char cur = s.charAt(i);
+			if (cur != c) r.setCharAt( current++, cur );
+		}
+		return r.toString();
+	}
+	
 }

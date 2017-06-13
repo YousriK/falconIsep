@@ -1,0 +1,35 @@
+# AVISEP
+
+AVISEP is an evaluation systeme dedicated to ISEP
+It should help teachers to improves there courses.
+It is based on a custom form builder for teachers, students can answer to these forms.
+
+## Installation
+
+1. Install Spring Tool Suite (STS)
+2. Clone or download the archive from GITHUB
+3. Import in STS the 'avisep' file as Maven Existing project
+4. Install MySQL on your computer
+5. Set the properties of the app on 'src/main/resources/application.properties'
+6. Right click in the Package Explorer of STS on 'avisep', then Run As > Spring Boot App
+7. It should work on port 8080 (set by default)
+
+## Contributing
+
+1. Fork it!
+2. Create your feature branch: `git checkout -b my-new-feature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin my-new-feature`
+5. Submit a pull request
+
+## History
+
+TODO: Write history
+
+## Credits
+
+TODO: Write credits
+
+## License
+
+TODO: Write license

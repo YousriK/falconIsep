@@ -37,7 +37,10 @@ Core.radio = function(title, options) {
 	this.options = options;
 }
 
-
+Core.roti = function(title) {
+	this.base = Core.question;
+	this.base("roti", title);
+}
 Core.checkbox = function(title, options) {
 	this.base = Core.question;
 	this.base("checkbox", title);

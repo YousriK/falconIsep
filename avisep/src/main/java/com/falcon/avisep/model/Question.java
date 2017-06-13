@@ -4,7 +4,10 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.GenerationType;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 
 
@@ -29,8 +32,8 @@ public class Question implements Serializable
 	@javax.persistence.ManyToMany 
 	protected Set<Form> form;
 
-	@javax.persistence.OneToMany(mappedBy = "question", cascade = javax.persistence.CascadeType.ALL) 
-	protected Set<Evaluation> evaluation;
+	@OneToOne(mappedBy="question", cascade = CascadeType.ALL)
+	protected Evaluation evaluation;
 
 	@javax.persistence.Id 
 	@javax.persistence.GeneratedValue(strategy=GenerationType.IDENTITY) 
@@ -48,7 +51,13 @@ public class Question implements Serializable
 	public String getqTitle() {
 		return qTitle;
 	}
-
+	public Evaluation getEvaluation() {
+		return evaluation;
+	}
+	public void setEvaluation(Evaluation evaluation) {
+		this.evaluation = evaluation;
+	}
+	
 	public void setqTitle(String qTitle) {
 		this.qTitle = qTitle;
 	}
@@ -72,12 +81,6 @@ public class Question implements Serializable
 		return (Set<Form>) this.form;
 	}
 
-	public Set<Evaluation> getEvaluation() {
-		if(this.evaluation == null) {
-				this.evaluation = new HashSet<Evaluation>();
-		}
-		return (Set<Evaluation>) this.evaluation;
-	}
 
 	public Long getId() {
 		return id;
@@ -95,14 +98,6 @@ public class Question implements Serializable
 			tmp.addQuestion(this);
 		
 	}
-	public void addAllEvaluation(Set<Evaluation> newEvaluation) {
-		if (this.evaluation == null) {
-			this.evaluation = new HashSet<Evaluation>();
-		}
-		for (Evaluation tmp : newEvaluation)
-			tmp.setQuestion(this);
-		
-	}
 	public void removeAllForm(Set<Form> newForm) {
 		if(this.form == null) {
 			return;
@@ -111,13 +106,6 @@ public class Question implements Serializable
 		this.form.removeAll(newForm);
 	}
 
-	public void removeAllEvaluation(Set<Evaluation> newEvaluation) {
-		if(this.evaluation == null) {
-			return;
-		}
-		
-		this.evaluation.removeAll(newEvaluation);
-	}
 
 	public void setIsPertinent(Boolean myIsPertinent) {
 		this.isPertinent = myIsPertinent;
@@ -136,20 +124,16 @@ public class Question implements Serializable
 		if (this.form.add(newForm))
 			newForm.addQuestion(this);
 	}
-	public void addEvaluation(Evaluation newEvaluation) {
-		if(this.evaluation == null) {
-			this.evaluation = new HashSet<Evaluation>();
-		}
-		
-		if (this.evaluation.add(newEvaluation))
-			newEvaluation.basicSetQuestion(this);
-	}
+	
 
 	public void unsetIsPertinent() {
 		this.isPertinent = null;
 	}
 	public void unsetQTitle() {
 		this.qTitle = null;
+	}
+	public void unsetEvaluation() {
+		this.evaluation = null;
 	}
 
 	public void unsetQType() {
@@ -164,13 +148,17 @@ public class Question implements Serializable
 			oldForm.removeQuestion(this);
 		
 	}
-	public void removeEvaluation(Evaluation oldEvaluation) {
-		if(this.evaluation == null)
-			return;
-		
-		if (this.evaluation.remove(oldEvaluation))
-			oldEvaluation.unsetQuestion();
-		
+	public void basicSetEvaluation(Evaluation myEvaluation) {
+		if (this.evaluation != myEvaluation) {
+			if (myEvaluation != null){
+				if (this.evaluation != myEvaluation) {
+					Evaluation oldevaluation = this.evaluation;
+					this.evaluation = myEvaluation;
+					if (oldevaluation != null)
+						oldevaluation.unsetQuestion();
+				}
+			}
+		}
 	}
 
 }

@@ -3,7 +3,7 @@ package com.falcon.avisep.model;
 import java.io.Serializable;
 
 @javax.persistence.Entity 
-@javax.persistence.DiscriminatorValue("ROLE_STUDENT")
+@javax.persistence.DiscriminatorValue("STUDENT")
 public class Student extends UserAvis implements Serializable
 {
 	private static final long serialVersionUID = 8823018571339295613L;

@@ -9,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Temporal;
 
 
-
 @javax.persistence.Entity 
 @javax.persistence.Table(name = "form")
 public class Form implements Serializable
@@ -31,6 +30,16 @@ public class Form implements Serializable
 	@javax.persistence.ManyToOne
 	protected UserAvis userAvis;
 	
+	
+	@javax.persistence.OneToOne(mappedBy = "form") 
+	protected Module module;
+	
+	@javax.persistence.OneToOne(mappedBy = "form") 
+	protected Cours cours;
+	
+	@javax.persistence.OneToOne(mappedBy = "form") 
+	protected Salle salle;
+	
 	@javax.persistence.Id 
 	@javax.persistence.GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
@@ -51,7 +60,85 @@ public class Form implements Serializable
 			}
 		}
 	}
+	public void basicSetSalle(Salle mySalle) {
+		if (this.salle != mySalle) {
+			if (mySalle != null){
+				if (this.salle != mySalle) {
+					Salle oldsalle = this.salle;
+					this.salle = mySalle;
+					if (oldsalle != null)
+						oldsalle.unsetForm();
+				}
+			}
+		}
+	}
+	public Salle getSalle() {
+		return this.salle;
+	}
+	
+	public void setSalle(Salle mySalle) {
+		this.basicSetSalle(mySalle);
+		mySalle.basicSetForm(this);
+		
+	}
+	
+	public void unsetSalle() {
+		if (this.salle == null)
+			return;
+		Salle oldsalle = this.salle;
+		this.salle = null;
+		oldsalle.unsetForm();
+	}
 
+	
+	public void basicSetCours(Cours myCours) {
+		if (this.cours != myCours) {
+			if (myCours != null){
+				if (this.cours != myCours) {
+					Cours oldcours = this.cours;
+					this.cours = myCours;
+					if (oldcours != null)
+						oldcours.unsetForm();
+				}
+			}
+		}
+	}
+	public Cours getCours() {
+		return this.cours;
+	}
+	public void setCours(Cours myCours) {
+		this.basicSetCours(myCours);
+		myCours.basicSetForm(this);
+		
+	}
+	public void unsetCours() {
+		if (this.cours == null)
+			return;
+		Cours oldcours = this.cours;
+		this.cours = null;
+		oldcours.unsetForm();
+	}
+	public Module getModule() {
+		return this.module;
+	}
+	public void setModule(Module myModule) {
+		this.basicSetModule(myModule);
+		myModule.basicSetForm(this);
+		
+	}
+	public void basicSetModule(Module myModule) {
+		if (this.module != myModule) {
+			if (myModule != null){
+				if (this.module != myModule) {
+					Module oldmodule = this.module;
+					this.module = myModule;
+					if (oldmodule != null)
+						oldmodule.unsetForm();
+				}
+			}
+		}
+	}
+	
 	public String getFormTitle() {
 		return this.formTitle;
 	}
@@ -129,6 +216,13 @@ public class Form implements Serializable
 		if (this.question.remove(oldQuestion))
 			oldQuestion.removeForm(this);
 		
+	}
+	public void unsetModule() {
+		if (this.module == null)
+			return;
+		Module oldmodule = this.module;
+		this.module = null;
+		oldmodule.unsetForm();
 	}
 	public void unsetUserAvis() {
 		if (this.userAvis == null)

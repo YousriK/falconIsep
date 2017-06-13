@@ -157,7 +157,7 @@ function addQuestion(type) {
 				'</div>'
 		break;
 	case "roti":
-		html = '<div class="well question yn-question" data-type="roti" id="' + id + '">' +
+		html = '<div class="well question roti-question" data-type="roti" id="' + id + '">' +
 					'<div class="form-group row question-form">' +
 						'<div class="col-xs-3 col-sm-1 col-md-1 col-lg-1">' +
 							'<button class="btn btn-danger btn-delete-question" type="button" data-id="' + id + '" onclick="deleteQuestion(this)"><span class="glyphicon glyphicon-minus"></span></button>' +
@@ -342,3 +342,23 @@ function createForm(url) {
 	});
 	return form;
 }
+
+
+
+
+
+
+
+//	function getClickClicked(){
+// var clickedElement=null;
+// var classes = null;
+// ELEMENT.on("click",function(e){
+//     clickedElement = $(e.target);
+//     classes = clickedElement.attr("class").split(" ");
+//     for(var i = 0; i < classes.length;i++)
+//     {
+//     	console.log(classes[i]);
+//     }
+//     e.preventDefault();
+// });
+//}	

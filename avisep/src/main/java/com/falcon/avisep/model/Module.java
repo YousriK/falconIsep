@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.GenerationType;
-
-
+import javax.persistence.JoinColumn;
 
  
 @javax.persistence.Entity 
@@ -26,14 +26,17 @@ public class Module implements Serializable
 
 	 
 	@javax.persistence.OneToMany(mappedBy = "module", cascade = javax.persistence.CascadeType.ALL) 
-	protected Set<Evaluation> evaluation;
-	 
-	@javax.persistence.OneToMany(mappedBy = "module", cascade = javax.persistence.CascadeType.ALL) 
 	protected Set<Cours> cours;
 
 	@javax.persistence.ManyToMany(mappedBy = "module") 
 	protected Set<UserAvis> userAvis;
-
+	
+	@javax.persistence.OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="form_id")
+	protected Form form;
+	@javax.persistence.ElementCollection 
+	protected Set<Long> evaluaters;
+	
 	@javax.persistence.Id 
 	@javax.persistence.GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private Long id;
@@ -41,7 +44,38 @@ public class Module implements Serializable
 	public Module(){
 		super();
 	}
-
+	public Set<Long> getEvaluaters() {
+		if(this.evaluaters == null) {
+				this.evaluaters = new HashSet<Long>();
+		}
+		return (Set<Long>) this.evaluaters;
+	}
+	public void addAllEvaluaters(Set<Long> newEvaluaters) {
+		if (this.evaluaters == null) {
+			this.evaluaters = new HashSet<Long>();
+		}
+		this.evaluaters.addAll(newEvaluaters);
+	}
+	public void removeAllEvaluaters(Set<Integer> newEvaluaters) {
+		if(this.evaluaters == null) {
+			return;
+		}
+		
+		this.evaluaters.removeAll(newEvaluaters);
+	}
+	public void addEvaluaters(Long newEvaluaters) {
+		if(this.evaluaters == null) {
+			this.evaluaters = new HashSet<Long>();
+		}
+		
+		this.evaluaters.add(newEvaluaters);
+	}
+	public void removeEvaluaters(Integer oldEvaluaters) {
+		if(this.evaluaters == null)
+			return;
+		
+		this.evaluaters.remove(oldEvaluaters);
+	}
 	public String getName() {
 		return this.name;
 	}
@@ -50,12 +84,6 @@ public class Module implements Serializable
 		return this.description;
 	}
 
-	public Set<Evaluation> getEvaluation() {
-		if(this.evaluation == null) {
-				this.evaluation = new HashSet<Evaluation>();
-		}
-		return (Set<Evaluation>) this.evaluation;
-	}
 
 	public Set<Cours> getCours() {
 		if(this.cours == null) {
@@ -79,15 +107,18 @@ public class Module implements Serializable
 		this.id = id;
 	}
 
-	public void addAllEvaluation(Set<Evaluation> newEvaluation) {
-		if (this.evaluation == null) {
-			this.evaluation = new HashSet<Evaluation>();
+	public void basicSetForm(Form myForm) {
+		if (this.form != myForm) {
+			if (myForm != null){
+				if (this.form != myForm) {
+					Form oldform = this.form;
+					this.form = myForm;
+					if (oldform != null)
+						oldform.unsetModule();
+				}
+			}
 		}
-		for (Evaluation tmp : newEvaluation)
-			tmp.setModule(this);
-		
 	}
-
 	public void addAllCours(Set<Cours> newCours) {
 		if (this.cours == null) {
 			this.cours = new HashSet<Cours>();
@@ -95,6 +126,21 @@ public class Module implements Serializable
 		for (Cours tmp : newCours)
 			tmp.setModule(this);
 		
+	}
+	public Form getForm() {
+		return this.form;
+	}
+	public void setForm(Form myForm) {
+		this.basicSetForm(myForm);
+		myForm.basicSetModule(this);
+		
+	}
+	public void unsetForm() {
+		if (this.form == null)
+			return;
+		Form oldform = this.form;
+		this.form = null;
+		oldform.unsetModule();
 	}
 
 	public void addAllUserAvis(Set<UserAvis> newUserAvis) {
@@ -105,14 +151,6 @@ public class Module implements Serializable
 			tmp.addModule(this);
 		
 	}
-	public void removeAllEvaluation(Set<Evaluation> newEvaluation) {
-		if(this.evaluation == null) {
-			return;
-		}
-		
-		this.evaluation.removeAll(newEvaluation);
-	}
-
 	public void removeAllCours(Set<Cours> newCours) {
 		if(this.cours == null) {
 			return;
@@ -136,14 +174,6 @@ public class Module implements Serializable
 		this.description = myDescription;
 	}
 
-	public void addEvaluation(Evaluation newEvaluation) {
-		if(this.evaluation == null) {
-			this.evaluation = new HashSet<Evaluation>();
-		}
-		
-		if (this.evaluation.add(newEvaluation))
-			newEvaluation.basicSetModule(this);
-	}
 
 	public void addCours(Cours newCours) {
 		if(this.cours == null) {
@@ -169,14 +199,6 @@ public class Module implements Serializable
 
 	public void unsetDescription() {
 		this.description = null;
-	}
-	public void removeEvaluation(Evaluation oldEvaluation) {
-		if(this.evaluation == null)
-			return;
-		
-		if (this.evaluation.remove(oldEvaluation))
-			oldEvaluation.unsetModule();
-		
 	}
 
 	public void removeCours(Cours oldCours) {

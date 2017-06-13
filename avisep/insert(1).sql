@@ -1,24 +1,11 @@
 INSERT INTO avisepdb.user_avis(
 	user_type,id, email, first_name, last_name, login, passwd)
-	VALUES ('ROLE_ADMIN', 0000000000, 'admin@avisep.fr', 'Mister', 'Admin', 'adminavisep', 'falconteamadmin'),
-	('ROLE_ETEACHER' , 0000000001, 'teacher1@avisep.fr', 'Miss', 'Teacher', 'teacheravisep1', 'falconteamteacher1'),
-	('ROLE_STUDENT' , 0000000002, 'acosson@avisep.fr', 'Adrien', 'Cosson', 'adriencosson', 'adrienfalcon'),
-	('ROLE_STUDENT' , 0000000003, 'psimao@avisep.fr', 'Pedro', 'Simao', 'pedrosimao', 'pedrofalcon'),
-	('ROLE_STUDENT' , 0000000004, 'aquinq@avisep.fr', 'Antoine', 'Quinquenel', 'aquinq', 'antoinefalcon'),
-	('ROLE_VTEACHER' , 0000000005, 'teacher2@avisep.fr', 'Mister', 'Teacher', 'teacher', 'falcon');
-
-
-
-INSERT INTO avisepdb.user_avis_role(
-	user_avis_id, role)
-	VALUES (0000000000, 'ROLE_ADMIN'),
-	(0000000001, 'ROLE_ETEACHER'),
-	(0000000002, 'ROLE_STUDENT'),
-	(0000000003, 'ROLE_STUDENT'),
-	(0000000004, 'ROLE_STUDENT'),
-	(0000000005, 'ROLE_VTEACHER');
-
-
+	VALUES ('ADMIN', 0000000000, 'admin@avisep.fr', 'Mister', 'Admin', 'adminavisep', 'falconteamadmin'),
+	('ETEACHER' , 0000000001, 'teacher1@avisep.fr', 'Miss', 'Teacher', 'teacheravisep1', 'falconteamteacher1'),
+	('STUDENT' , 0000000002, 'acosson@avisep.fr', 'Adrien', 'Cosson', 'adriencosson', 'adrienfalcon'),
+	('STUDENT' , 0000000003, 'psimao@avisep.fr', 'Pedro', 'Simao', 'spedro', 'falcon'),
+	('STUDENT' , 0000000004, 'aquinq@avisep.fr', 'Antoine', 'Quinquenel', 'aquinq', 'antoinefalcon'),
+	('VTEACHER' , 0000000005, 'teacher2@avisep.fr', 'Mister', 'Teacher', 'teacher', 'falcon');
 
 INSERT INTO avisepdb.module(
 	id, description, name)
@@ -106,3 +93,27 @@ INSERT INTO avisepdb.salle(id, location, name, cours_id)
 	VALUES (0000000002, 2018),
 	(0000000003, 2018),
 	(0000000004, 2019);
+	
+	UPDATE avisepdb.user_avis
+	SET role='ADMIN'
+	WHERE id=0000000000;
+    
+    UPDATE avisepdb.user_avis
+	SET role='ETEACHER'
+	WHERE id=0000000001;
+    
+    UPDATE avisepdb.user_avis
+	SET role='STUDENT'
+	WHERE id=0000000002;
+    
+     UPDATE avisepdb.user_avis
+	SET role='STUDENT'
+	WHERE id=0000000003;
+    
+     UPDATE avisepdb.user_avis
+	SET role='STUDENT'
+	WHERE id=0000000004;
+    
+    UPDATE avisepdb.user_avis
+	SET role='VTEACHER'
+WHERE id=0000000005;

@@ -1,19 +1,18 @@
-<!DOCTYPE html>
+<!DOCTYPE html >
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>AVISEP</title>
-<script type="text/javascript" src="jquery/jquery-3.2.1.js"></script>
-<script type="text/javascript" src="js/Core.js"></script>
-<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
-<link href="bootstrap/css/bootstrap.min.css" type="text/css"
+<script type="text/javascript" src="/jquery/jquery-3.2.1.js"></script>
+<script type="text/javascript" src="/js/Core.js"></script>
+<script type="text/javascript" src="/bootstrap/js/bootstrap.js"></script>
+<link href="bootstrap/css/bootstrap.min.css" type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}"
 	rel="stylesheet" />
-<link href="css/avisep.css" type="text/css" rel="stylesheet" />
+<link href="css/avisep.css" type="text/css" rel="stylesheet" th:href="@{/css/avisep.css}"/>
 </head>
 <body>
-
-	<nav class="navbar navbar-default" style="z-index:1; background-color:white">
+	<nav class="navbar navbar-default">
 		<div class="container-fluid">
 			<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="navbar-header">
@@ -33,14 +32,25 @@
 			<div class="collapse navbar-collapse"
 				id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href=""
-						aria-haspopup="true"
+					<li><a href="#">Switch to English</a></li>
+					
+					<li class="dropdown"><a href="" class="dropdown-toggle"
+						data-toggle="dropdown" role="button" aria-haspopup="true"
 						aria-expanded="false" th:object="${session.userLogged}">
-						<span class="glyphicon glyphicon-user"></span>
 						<span th:text="*{firstName}"></span>
 						<span th:text="*{lastName}"></span>
-					</a></li>
-					<li><a th:href="@{/logout}"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
+						
+						<span class="caret" th:id="*{id}"></span>
+					</a>
+						<ul class="dropdown-menu">
+							<li align="center"><a href="">My Courses <span
+									class="badge">12</span></a></li>
+							<li align="center"><a href="">Available Surveys <span
+									class="badge">4</span></a></li>
+							<li align="center" role="separator" class="divider"></li>
+							<li align="center"><a th:href="@{/logout}">Log Out</a></li>
+						</ul></li>
+					<li><a th:href="@{/logout}">Log Out</a></li>
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -48,6 +58,6 @@
 		<!-- /.container-fluid -->
 	</nav>
 	<div layout:fragment="page-content"></div>
-	<script type="text/javascript" src="js/Form.js"></script>
+	<script type="text/javascript" src="/js/Form.js"></script>
 </body>
 </html>

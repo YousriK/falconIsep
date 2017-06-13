@@ -9,16 +9,58 @@
 	<script src="bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
-
-
 <div layout:fragment="page-content">
-		<div class="content">
-			<div class="jumbotron" align="center" style="margin-top: 50px;">
-				<div align="center">
-					<a href="/" class="btn btn-lg btn-primary">Back home</a>
-				</div>
-			</div>
-		</div>
+
+<div class="content">
+  <ul class="nav nav-tabs" style="border-color:">
+    <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
+    <li><a data-toggle="tab" href="#users">Manage Users</a></li>
+    <li><a data-toggle="tab" href="#modules">Manage Modules</a></li>
+    <li><a data-toggle="tab" href="#courses">Manage Courses</a></li>
+    <li><a data-toggle="tab" href="#classrooms">Manage Classrooms</a></li>
+    <li><a data-toggle="tab" href="#classes">Manage Classes</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+    	<div class="panel panel-default">
+    		<h3 class="panel-body">Home</h3>
+        	<p class="panel-body">Welcome Admin, do what you want to do here !</p>
+    	</div>
+    </div>
+    <div id="users" class="tab-pane fade in active">
+    	<div class="panel panel-default">
+    		<h3 class="panel-body">Yo Buddy</h3>
+        	<p class="panel-body">Welcome Admin, manage Users here !</p>
+    	</div>
+    </div>
+    <div id="modules" class="tab-pane fade in active">
+    	<div class="panel panel-default">
+    		<h3 class="panel-body">Yo Buddy</h3>
+        	<p class="panel-body">Welcome Admin, manage Modules here !</p>
+    	</div>
+    </div>
+    <div id="courses" class="tab-pane fade in active">
+    	<div class="panel panel-default">
+    		<h3 class="panel-body">Yo Buddy</h3>
+        	<p class="panel-body">Welcome Admin, manage Courses here !</p>
+    	</div>
+    </div>
+    <div id="classrooms" class="tab-pane fade in active">
+    	<div class="panel panel-default">
+    		<h3 class="panel-body">Yo Buddy</h3>
+        	<p class="panel-body">Welcome Admin, manage Classrooms here !</p>
+    	</div>
+    </div>
+    <div id="classes" class="tab-pane fade in active">
+    	<div class="panel panel-default">
+    		<h3 class="panel-body">Yo Buddy</h3>
+        	<p class="panel-body">Welcome Admin, manage Classes here !</p>
+    	</div>
+    </div>
+  </div>
+</div>
+
 </div>
 </body>
 </html>

@@ -1,10 +1,12 @@
 package com.falcon.avisep.model;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.GenerationType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @javax.persistence.Entity 
@@ -16,6 +18,10 @@ public abstract class UserAvis
 	@javax.persistence.Column 
 	protected String lastName;
 
+	protected String token;
+	protected Date tokenExpiration;
+    
+	 private String ldapId;
 	 
 	@javax.persistence.Column 
 	protected String login;
@@ -31,11 +37,9 @@ public abstract class UserAvis
 	protected String passwd;
 
 	@javax.persistence.Enumerated(javax.persistence.EnumType.STRING) 
-	@javax.persistence.ElementCollection(targetClass = Role.class) 
-	protected Set<Role> role;
+//	@javax.persistence.ElementCollection(targetClass = Role.class) 
+	protected Role role;
 
-	@javax.persistence.OneToMany(mappedBy = "user", cascade = javax.persistence.CascadeType.ALL) 
-	protected Set<Evaluation> evaluation;
 
 	@javax.persistence.ManyToMany(cascade = javax.persistence.CascadeType.ALL) 
 	protected Set<Classe> classe;
@@ -45,7 +49,7 @@ public abstract class UserAvis
 
 	@javax.persistence.OneToMany( fetch = javax.persistence.FetchType.EAGER,mappedBy = "userAvis") 
 	protected Set<Form> form;
-
+	
 	@javax.persistence.Id 
 	@javax.persistence.GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private Long id;
@@ -53,7 +57,40 @@ public abstract class UserAvis
 	public UserAvis(){
 		super();
 	}
+	
+	@JsonIgnore
+    public String getLdapId() {
+        return ldapId;
+    }
+    public void setLdapId(String ldapId) {
+        this.ldapId = ldapId;
+    }
 
+	@JsonIgnore
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+    @JsonIgnore
+    public Date getTokenExpiration() {
+        return tokenExpiration;
+    }
+
+    public void setTokenExpiration(Date tokenExpiration) {
+        this.tokenExpiration = tokenExpiration;
+    }
+	public Role getRole() {
+		return this.role;
+	}
+	public void setRole(Role myRole) {
+		this.role = myRole;
+	}
+	public void unsetRole() {
+		this.role = null;
+	}
 	public String getLastName() {
 		return this.lastName;
 	}
@@ -71,20 +108,6 @@ public abstract class UserAvis
 	}
 	public String getPasswd() {
 		return this.passwd;
-	}
-
-	public Set<Role> getRole() {
-		if(this.role == null) {
-				this.role = new HashSet<Role>();
-		}
-		return (Set<Role>) this.role;
-	}
-
-	public Set<Evaluation> getEvaluation() {
-		if(this.evaluation == null) {
-				this.evaluation = new HashSet<Evaluation>();
-		}
-		return (Set<Evaluation>) this.evaluation;
 	}
 
 	public Set<Classe> getClasse() {
@@ -115,22 +138,6 @@ public abstract class UserAvis
 		this.id = id;
 	}
 
-	public void addAllRole(Set<Role> newRole) {
-		if (this.role == null) {
-			this.role = new HashSet<Role>();
-		}
-		this.role.addAll(newRole);
-	}
-
-	public void addAllEvaluation(Set<Evaluation> newEvaluation) {
-		if (this.evaluation == null) {
-			this.evaluation = new HashSet<Evaluation>();
-		}
-		for (Evaluation tmp : newEvaluation)
-			tmp.setUser(this);
-		
-	}
-
 	public void addAllClasse(Set<Classe> newClasse) {
 		if (this.classe == null) {
 			this.classe = new HashSet<Classe>();
@@ -155,21 +162,6 @@ public abstract class UserAvis
 		for (Form tmp : newForm)
 			tmp.setUserAvis(this);
 		
-	}
-
-	public void removeAllRole(Set<Role> newRole) {
-		if(this.role == null) {
-			return;
-		}
-		
-		this.role.removeAll(newRole);
-	}
-	public void removeAllEvaluation(Set<Evaluation> newEvaluation) {
-		if(this.evaluation == null) {
-			return;
-		}
-		
-		this.evaluation.removeAll(newEvaluation);
 	}
 	public void removeAllClasse(Set<Classe> newClasse) {
 		if(this.classe == null) {
@@ -213,22 +205,6 @@ public abstract class UserAvis
 		this.passwd = myPasswd;
 	}
 
-	public void addRole(Role newRole) {
-		if(this.role == null) {
-			this.role = new HashSet<Role>();
-		}
-		
-		this.role.add(newRole);
-	}
-
-	public void addEvaluation(Evaluation newEvaluation) {
-		if(this.evaluation == null) {
-			this.evaluation = new HashSet<Evaluation>();
-		}
-		
-		if (this.evaluation.add(newEvaluation))
-			newEvaluation.basicSetUser(this);
-	}
 
 	public void addClasse(Classe newClasse) {
 		if(this.classe == null) {
@@ -274,22 +250,6 @@ public abstract class UserAvis
 
 	public void unsetPasswd() {
 		this.passwd = null;
-	}
-
-	public void removeRole(Role oldRole) {
-		if(this.role == null)
-			return;
-		
-		this.role.remove(oldRole);
-	}
-
-	public void removeEvaluation(Evaluation oldEvaluation) {
-		if(this.evaluation == null)
-			return;
-		
-		if (this.evaluation.remove(oldEvaluation))
-			oldEvaluation.unsetUser();
-		
 	}
 
 	public void removeClasse(Classe oldClasse) {

@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Welcome Student !</title>
-<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<link href="../../static/bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
@@ -13,9 +13,9 @@
 <!-- Tabs for each things that will be available for a student she/he's connected -->		
 <div class="content">
   <ul class="nav nav-tabs" style="border-color:">
-    <li class="active"><a data-toggle="tab" href="#home">Available Surveys <span class="badge" style="background-color:#428bca">4</span></a></li>
-    <li><a data-toggle="tab" href="#menu1">Evaluated Courses <span class="badge" style="background-color:#428bca">2</span></a></li>
-    <li><a data-toggle="tab" href="#menu2">My Modules <span class="badge" style="background-color:#428bca">5</span></a></li>
+    <li class="active"><a data-toggle="tab" href="#home">Available Surveys <span class="badge" style="background-color:#428bca" th:text="${finalListCours!=null?finalListCours.size():0}">4</span></a></li>
+    <li><a data-toggle="tab" href="#menu1">Evaluated Courses <span class="badge" style="background-color:#428bca" th:text="${evaluations!=null?evaluations.size():0}">2</span></a></li>
+    <li><a data-toggle="tab" href="#menu2">My Modules <span class="badge" style="background-color:#428bca" th:text="${myListModulesByIdUser!=null?myListModulesByIdUser.size():0}">5</span></a></li>
   </ul>
 
   <div class="tab-content">
@@ -23,15 +23,18 @@
     	<div class="panel panel-default">
     		<h3 class="panel-body">Available Surveys</h3>
         	<p class="panel-body">This Menu will display panels on which there's an available survey (ROTI or Questions) where you can click on to answer.</p>
-        	<div class="row panel-body">
+        	<div class="row panel-body"><div th:if="${finalListCours == null}">
   				<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
     				<div class="thumbnail well" style="height:141px;width:150px" align="center">Available Survey 1</div>
     				<a href="answerF" class="btn btn-primary" style="margin-bottom:20px">Answer Form</a>
-  				</div>
-  				<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-    				<div class="thumbnail well" style="height:141px;width:150px" align="center">Available Survey 2</div>
-    				<a href="answerF" class="btn btn-primary" style="margin-bottom:20px">Answer Form</a>
-  				</div>
+  				</div></div>
+  				
+  				<div th:if="${finalListCours != null}">
+  					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" th:each="cours  : ${finalListCours}">
+	    				<div class="thumbnail well" style="height:141px;width:150px" align="center" th:text="${cours.description}">Course 1</div>
+	    				<a class="btn btn-primary" style="margin-bottom:20px" th:href="@{'/welcomeS/answerF/'+${cours.id}+'/'+${cours.description}}">Answer Form</a>
+  					</div>
+				</div>
 			</div>
     	</div>
     </div>
@@ -39,11 +42,20 @@
      	<div class="panel panel-default">
     		<h3 class="panel-body">Evaluated Courses</h3>
         	<p class="panel-body">This Menu will display panels of the courses you have already evaluated, and you can only check your answers.</p>
-        	<div class="row panel-body">
+        	<div class="row panel-body"><div th:if="${evaluations == null}">
   				<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
     				<div class="thumbnail well" style="height:141px;width:150px" align="center">Evaluated Course 1</div>
     				<button data-toggle="modal" data-target="#checkresults" class="btn btn-primary" style="margin-bottom:20px">See Your Answers</button>
-  				</div>
+  				</div></div>
+  				
+  				<div th:if="${evaluations != null}">
+  					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" th:each="cours  : ${evaluations}">
+	    				<div class="thumbnail well" style="height:141px;width:150px" align="center" th:text="${cours.description}">Course 1</div>
+	    				<button data-toggle="modal" data-target="#checkresults" class="btn btn-primary" style="margin-bottom:20px">See Your Answers</button>
+<!--  	    				<a class="btn btn-primary" style="margin-bottom:20px" th:href="@{'/WelcomeS/answerF/'+${cours.id}}">See Your Answers</a>  -->
+  					</div>
+				</div>
+  				
 			</div>
     	</div>
     </div>
@@ -51,18 +63,20 @@
     	<div class="panel panel-default">
     		<h3 class="panel-body">My Modules</h3>
         	<p class="panel-body">Simple menu to check which modules you are registered in.</p>
-        	<div class="row panel-body">
+        	<div class="row panel-body"><div th:if="${myListModulesByIdUser == null}">
   				<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
     				<div class="thumbnail well" style="height:141px;width:150px" align="center">My Modules 1</div>
-  				</div>
+  				</div></div>
+  				<div th:if="${myListModulesByIdUser != null}">
+	  				<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" th:each="module  : ${myListModulesByIdUser}">
+			 				<div class="thumbnail well" style="height:141px;width:150px" align="center" th:text="${module.name}">Module 1</div>
+					</div>
+				</div>
 			</div>
     	</div>
     </div>
   </div>
 </div>
-
-
-
 <!-- Modal to check answers -->
 <div id="checkresults" class="modal fade" role="dialog">
   <div class="modal-dialog">

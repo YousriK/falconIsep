@@ -1,43 +1,169 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
+<html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="layouts/navbar">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Welcome</title>
-	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script src="bootstrap/js/bootstrap.min.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Welcome</title>
+<!-- <link href="../../static/bootstrap/css/bootstrap.min.css" -->
+<!-- 	th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet" /> -->
+<!-- <script -->
+<!-- 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
+<!-- <script src="/bootstrap/js/bootstrap.min.js"></script> -->
+
+<script th:inline="javascript">
+	$(document).ready(
+			function() {
+	var promise = new Promise(function(resolve) {
+		resolve(removeEventHandlers());
+	});
+	promise.then(function(result) {
+		$(".roti-preview").click(function() {
+			$(this).parent().find(".roti-preview-selected").removeClass("roti-preview-selected").addClass("roti-preview");
+			$(this).removeClass("roti-preview").addClass("roti-preview-selected");
+		});
+		$(".false").click(function() {
+			$(this).removeClass(".false").addClass(".true");
+			$(this).prev().val('true');
+		});
+		$(".true").click(function() {
+			$(this).removeClass(".true").addClass(".false");
+			$(this).prev().val('false');
+		});
+	});
+	$("form").on("submit", function(event) {
+		event.preventDefault();
+		var json = {};
+	    // converting to formname:formvalue format
+	    $.each($("form").serializeArray(), function (i, field) {
+	        json[field.name] = field.value || '';
+	    });
+	    // stringify the parameter
+	    var evaluations = { paramJson: JSON.stringify(json) };
+	    var string =JSON.stringify(evaluations);
+	    //alert(string);
+		$.ajax({
+			url : "/welcomeS/saveEvaluation/"+$("form").attr("id")+"/"+$(".caret").attr("id"),
+			data : JSON.stringify(evaluations),
+			type: "post",
+	        datatype: "html",
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader("Accept", "application/json");
+				xhr.setRequestHeader("Content-Type", "application/json");
+			},error: function (xhr, ajaxOptions, thrownError) {
+                alert(" write json item, Ajax error! " + xhr.status + " error =" + thrownError + " xhr.responseText = " + xhr.responseText );    
+            },
+            success: function (data) {
+            	window.location.href='http://localhost:9090/welcomeS';
+            	//alert("write json item, Ajax  OK => ");
+            } 
+		});
+ 	});
+});
+	function removeEventHandlers() {
+		$(".roti-preview").off();
+		$(".true").off();
+		$(".false").off();
+	}
+</script>
+
 </head>
 <body>
-<div layout:fragment="page-content">
+	<div layout:fragment="page-content">
 
-<div class="content">
-  <ul class="nav nav-tabs" style="border-color:">
-    <li class="active"><a data-toggle="tab" href="#answer">Answer to Form refered to Course 1</a></li>
-  </ul>
+		<div class="content">
+			<ul class="nav nav-tabs" style="border-color:">
+				<li class="active"><a data-toggle="tab" href="#answer">Answer
+						to Form refered to <span th:text="*{description}"></span>
+				</a></li>
+			</ul>
+			<div class="tab-content">
+				<div id="answer" class="tab-pane fade in active">
+					<div class="panel panel-default">
+						<h3 class="panel-body form-title-preview form-hint" id="form-title-preview" th:text="${modelViewAnsForm.formTitle}">Title Form</h3>
 
-  <div class="tab-content">
-    <div id="answer" class="tab-pane fade in active">
-    	<div class="panel panel-default">
-    		<h3 class="panel-body" align="center">Title Form</h3>
-        	
-        	<div class="panel-body">
-  				<form>
-  				<!-- There will be displayed all the questions refering to Course -->
-  				<div align="right">
-					<button type="submit" title="Send your answers!"
-						class="btn btn-primary" id="create-form">
-						<span class="glyphicon glyphicon-send glyphicon-left"></span>Send your answers
-					</button>
+						<div class="panel-body">
+							<form th:id="${modelViewAnsForm.cours.id}" th:method="post">
+
+<!-- 								'/welcomeS/sendEvaluation/'+${id} -->
+								
+								<div th:each="question  : ${modelViewAnsForm.question}">
+								
+									<div th:switch="${question.qType}">
+										
+										<div th:case="'text'" class="form-group row question-preview" id="' + id + '_preview" data-type="text">
+											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+												<label class="question-title-preview   " id="' + id + '_title_preview" th:text="${question.qTitle}"></label></div>
+											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+												<textarea class="form-control question-answer-preview" placeholder="Type your answer" th:name="${question.id+'-'+question.qTitle}"  rows="1"></textarea>
+											</div>
+										</div>
+										
+										<div th:case="'yn'" class="form-group row question-preview" id="' + id + '_preview" data-type="yn">
+											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+												<label class="question-title-preview " id="' + id + '_title_preview" th:text="${question.qTitle}"></label>
+											</div>
+											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+											<div class="yn_switch_label">Non</div>
+											<div class="yn_switch_label" id="yn_switch_oui">Oui</div>
+											<div class="yn_switch">
+												<input id="cmn-toggle-1-' + id + '" class="cmn-toggle cmn-toggle-round" type="checkbox" th:name="${question.id+'-'+question.qTitle+'-yn'}" value="false" /> 
+												<label class="false yOrN" for="cmn-toggle-1-' + id + '"></label>
+											</div>
+										</div>
+
+										</div> 
+										<div th:case="'radio'" class="form-group row question-preview" id="' + id + '_preview" data-type="checkbox">
+											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+													<label class="question-title-preview  " id="' + id + '_title_preview" th:text="${question.qTitle}"></label></div>
+												<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="' + id + '_options_preview">
+												<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 option-preview" id="' + id + '_option_preview" th:each="values : ${modelViewAnsForm.optionById.get(question.id)}">
+													<input th:name="${question.id+'-'+question.qTitle}" type="radio" th:each="item : ${values}" th:value="${item}"></input>
+													<label class="question-options-preview form-hint" id="' + id + '_title_preview" th:each="item : ${values}" th:text="${item}">Ajoutez un titre à votre option</label>
+												</div>
+											</div>
+										</div> 
+										<div th:case="'checkbox'" class="form-group row question-preview" id="' + id + '_preview" data-type="checkbox" >
+											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+												<label class="question-title-preview " id="' + id + '_title_preview" th:text="${question.qTitle}">Ajoutez un titre à votre question</label>
+											</div>
+											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 option-preview" id="' + id + '_option_preview" th:each="values : ${modelViewAnsForm.optionById.get(question.id)}">
+												<input type="checkbox"   th:each="item : ${values}" th:value="${item}" th:name="${question.id+'-'+question.qTitle+'-'+item}"/>
+												<label class="question-options-preview form-hint" id="' + id + '_title_preview" th:each="item : ${values}" th:text="${item}">Ajoutez un titre à votre option</label>
+											</div>
+										</div>
+										<div th:case="'roti'" class="form-group row question-preview" data-type="roti" th:id="${question.id}+'_preview'" >
+											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+												<label class="question-title-preview   " th:id="${question.id}+'_title_preview'" th:text="${question.qTitle}"></label>
+												
+											</div><input type="hidden"/>
+											<div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 roti-preview" id="roti-preview-5"></div>
+											<div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 roti-preview" id="roti-preview-4"></div>
+											<div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 roti-preview" id="roti-preview-3"></div>
+											<div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 roti-preview" id="roti-preview-2"></div>
+											<div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 roti-preview" id="roti-preview-1"></div>
+										</div>
+<!-- \'' + ${question.qType} + '\' -->
+
+
+									</div>
+								
+								</div>
+								
+								<div align="right">
+									<button type="submit" title="Send your answers!"
+										class="btn btn-primary">
+										<span class="glyphicon glyphicon-send glyphicon-left"></span>Send
+										your answers
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
 				</div>
-  				</form>
 			</div>
-    	</div>
-    </div>
-  </div>
-</div>
-
-</div>
+		</div>
+	</div>
 </body>
+
 </html>

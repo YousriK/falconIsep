@@ -17,9 +17,6 @@ public class Classe implements Serializable
 	@javax.persistence.Column 
 	protected String name;
 	 
-	@javax.persistence.OneToMany(mappedBy = "classe") 
-	protected Set<Evaluation> evaluation;
-	 
 	@javax.persistence.ManyToMany(mappedBy = "classe") 
 	protected Set<UserAvis> userAvis;
 
@@ -33,13 +30,6 @@ public class Classe implements Serializable
 
 	public String getName() {
 		return this.name;
-	}
-
-	public Set<Evaluation> getEvaluation() {
-		if(this.evaluation == null) {
-				this.evaluation = new HashSet<Evaluation>();
-		}
-		return (Set<Evaluation>) this.evaluation;
 	}
 	
 	public Set<UserAvis> getUserAvis() {
@@ -57,14 +47,6 @@ public class Classe implements Serializable
 		this.id = id;
 	}
 
-	public void addAllEvaluation(Set<Evaluation> newEvaluation) {
-		if (this.evaluation == null) {
-			this.evaluation = new HashSet<Evaluation>();
-		}
-		for (Evaluation tmp : newEvaluation)
-			tmp.setClasse(this);
-		
-	}
 
 	public void addAllUserAvis(Set<UserAvis> newUserAvis) {
 		if (this.userAvis == null) {
@@ -73,13 +55,6 @@ public class Classe implements Serializable
 		for (UserAvis tmp : newUserAvis)
 			tmp.addClasse(this);
 		
-	}
-	public void removeAllEvaluation(Set<Evaluation> newEvaluation) {
-		if(this.evaluation == null) {
-			return;
-		}
-		
-		this.evaluation.removeAll(newEvaluation);
 	}
 
 	public void removeAllUserAvis(Set<UserAvis> newUserAvis) {
@@ -94,14 +69,6 @@ public class Classe implements Serializable
 		this.name = myName;
 	}
 
-	public void addEvaluation(Evaluation newEvaluation) {
-		if(this.evaluation == null) {
-			this.evaluation = new HashSet<Evaluation>();
-		}
-		
-		if (this.evaluation.add(newEvaluation))
-			newEvaluation.basicSetClasse(this);
-	}
 
 	public void addUserAvis(UserAvis newUserAvis) {
 		if(this.userAvis == null) {
@@ -114,14 +81,6 @@ public class Classe implements Serializable
 
 	public void unsetName() {
 		this.name = null;
-	}
-	public void removeEvaluation(Evaluation oldEvaluation) {
-		if(this.evaluation == null)
-			return;
-		
-		if (this.evaluation.remove(oldEvaluation))
-			oldEvaluation.unsetClasse();
-		
 	}
 	public void removeUserAvis(UserAvis oldUserAvis) {
 		if(this.userAvis == null)
