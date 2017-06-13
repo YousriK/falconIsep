@@ -22,6 +22,49 @@
     -moz-box-shadow: 0 0 10px black;
     -webkit-box-shadow: 0 0 10px black;
     box-shadow: 0 0 10px black;
+    -webkit-animation: place 3s linear forwards;
+    -moz-animation: place 3s ease-in-out forwards;
+    animation: place 3s linear forwards;
+}
+
+@-webkit-keyframes place {
+    0% {
+        bottom:50%;
+        background-color: rgba(255, 255, 255, 1);
+    }
+	50% {
+    	background-color: rgba(255, 255, 255, 1);
+    }
+    100% {
+        bottom: 0%;
+        background-color: rgba(255, 255, 255, 0.6);
+    }
+}
+@-moz-keyframes place {
+    0% {
+        bottom:50%;
+        background-color: rgba(255, 255, 255, 1);
+    }
+    50% {
+    	background-color: rgba(255, 255, 255, 1);
+    }
+    100% {
+        bottom: 0%;
+        background-color: rgba(255, 255, 255, 0.6);
+    }
+}
+@keyframes place {
+    0% {
+        bottom:50%;
+        background-color: rgba(255, 255, 255, 1);
+    }
+    50% {
+    	background-color: rgba(255, 255, 255, 1);
+    }
+    100% {
+        bottom:0%;
+        background-color: rgba(255, 255, 255, 0.6);
+    }
 }
 
 h2 {
